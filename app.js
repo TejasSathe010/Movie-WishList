@@ -1,9 +1,11 @@
 // Movie Class: Represents a Movie.
 class Movie {
+    static index = 0
      constructor(title, genre, date) {
-         this.title = title;
-         this.genre = genre;
-         this.date = date;
+        Movie.index++;
+        this.title = title;
+        this.genre = genre;
+        this.date = date;
      }
 }
 
@@ -11,7 +13,7 @@ class Movie {
 // UI Class: Handle a UI task.
 class UI {
     static displayMovies() {
-
+        const movies = Store.getMovies();
         movies.forEach((movie) => {
             UI.addMovieToList(movie);
         });
@@ -21,6 +23,7 @@ class UI {
         const list = document.querySelector('#movie-list');
 
         const row = document.createElement('tr');
+        // Debug: <td>${Movie.index}</td>
         row.innerHTML = `
         <td>${movie.title}</td>
         <td>${movie.genre}</td>
@@ -61,6 +64,35 @@ class UI {
 
 
 // Store Class: Handle Storage.
+class Store{
+    static getMovies() {
+        let movies; 
+        if(localStorage.getItem('movies') === null) {
+            movies = []; 
+        } else {
+            movies = JSON.parse(localStorage.getItem('movies'));
+        }
+        return movies;
+    }
+
+    static addMovie(movie) {
+        const movies = Store.getMovies();
+        movies.push(movie);
+        localStorage.setItem('movies', JSON.stringify(movies));
+    }
+
+    static removeMovie(index) {
+        const movies = Store.getMovies();
+
+        movies.forEach((movie, currentIndex) => {
+            if(movie.index === index) {
+                movies.splice(currentIndex, 1);
+            }
+        });
+        localStorage.setItem('movies', JSON.stringify(movies));
+    }
+}
+
 
 // Event: To Display Movies.
 document.addEventListener('click', UI.displayMovies);
@@ -84,6 +116,11 @@ document.querySelector('#movie-form').addEventListener('submit', (e) => {
     // Add the new Movie to UI.
 
     UI.addMovieToList(newMovie);
+
+    // Add the new Movie to Storage.
+
+    Store.addMovie(newMovie);
+
     UI.showAlert('Movie Added to Wishlist', 'success')
 
     UI.clearFields();
@@ -94,7 +131,7 @@ document.querySelector('#movie-form').addEventListener('submit', (e) => {
 // Using event propogation.
 
 document.querySelector('#movie-list').addEventListener('click', (e) => {
-    console.log(e.target)
+    // Debug: console.log(e.target)
     UI.deleteMovie(e.target);
     UI.showAlert('Movie Removed From Wishlist', 'success')
 });
