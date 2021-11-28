@@ -31,6 +31,12 @@ class UI {
         list.appendChild(row);
     }
 
+    static deleteMovie(element) {
+        if(element.classList.contains('delete')) {
+            element.parentElement.parentElement.remove();
+        }
+    }
+
     static clearFields() {
         document.querySelector('#title').value = '';
         document.querySelector('#genre').value = '';
@@ -51,8 +57,11 @@ document.querySelector('#movie-form').addEventListener('submit', (e) => {
     const genre = document.querySelector('#genre').value;
     const date = document.querySelector('#date').value;
 
-    // Debug: console.log(title, genre, date);
+    // Validate
+    if(title === '' || genre === '' || date === '') {
 
+    } else {
+    // Debug: console.log(title, genre, date);
     // Create a New Movie Instance.
     const newMovie = new Movie(title, genre, date);
 
@@ -62,7 +71,13 @@ document.querySelector('#movie-form').addEventListener('submit', (e) => {
     UI.addMovieToList(newMovie);
 
     UI.clearFields();
-
+    }
 });
 
 // Event: To Remove a Movie.
+// Using event propogation.
+
+document.querySelector('#movie-list').addEventListener('click', (e) => {
+    console.log(e.target)
+    UI.deleteMovie(e.target);
+});
