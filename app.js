@@ -37,6 +37,21 @@ class UI {
         }
     }
 
+    static showAlert(message, className) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${className}`;
+        alertDiv.appendChild(document.createTextNode(message));
+        const container = document.querySelector('.container');
+        const form = document.querySelector('#movie-form');
+        container.insertBefore(alertDiv, form);
+
+        // Make disappear in 3 seconds.
+        setTimeout(() => {
+            document.querySelector('.alert').remove();
+        }, 3000)
+    }
+
+
     static clearFields() {
         document.querySelector('#title').value = '';
         document.querySelector('#genre').value = '';
@@ -59,7 +74,7 @@ document.querySelector('#movie-form').addEventListener('submit', (e) => {
 
     // Validate
     if(title === '' || genre === '' || date === '') {
-
+         UI.showAlert('Please fill in all fields', 'danger')
     } else {
     // Debug: console.log(title, genre, date);
     // Create a New Movie Instance.
