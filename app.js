@@ -84,6 +84,7 @@ document.querySelector('#movie-form').addEventListener('submit', (e) => {
     // Add the new Movie to UI.
 
     UI.addMovieToList(newMovie);
+    UI.showAlert('Movie Added to Wishlist', 'success')
 
     UI.clearFields();
     }
@@ -95,4 +96,5 @@ document.querySelector('#movie-form').addEventListener('submit', (e) => {
 document.querySelector('#movie-list').addEventListener('click', (e) => {
     console.log(e.target)
     UI.deleteMovie(e.target);
+    UI.showAlert('Movie Removed From Wishlist', 'success')
 });
