@@ -1,6 +1,6 @@
 // Movie Class: Represents a Movie.
 class Movie {
-    static index = 0
+    static index = 1;
      constructor(title, genre, date) {
         Movie.index++;
         this.title = title;
@@ -14,6 +14,7 @@ class Movie {
 class UI {
     static displayMovies() {
         const movies = Store.getMovies();
+
         movies.forEach((movie) => {
             UI.addMovieToList(movie);
         });
@@ -25,6 +26,7 @@ class UI {
         const row = document.createElement('tr');
         // Debug: <td>${Movie.index}</td>
         row.innerHTML = `
+        <td>${Movie.index}</td>
         <td>${movie.title}</td>
         <td>${movie.genre}</td>
         <td>${movie.date}</td>
@@ -72,6 +74,7 @@ class Store{
         } else {
             movies = JSON.parse(localStorage.getItem('movies'));
         }
+        console.log(movies);
         return movies;
     }
 
@@ -95,7 +98,8 @@ class Store{
 
 
 // Event: To Display Movies.
-document.addEventListener('click', UI.displayMovies);
+// As sson as dom loads.
+document.addEventListener('DOMContentLoaded', UI.displayMovies);
 
 // Event: To Add a Movie.
 document.querySelector('#movie-form').addEventListener('submit', (e) => {
@@ -133,5 +137,7 @@ document.querySelector('#movie-form').addEventListener('submit', (e) => {
 document.querySelector('#movie-list').addEventListener('click', (e) => {
     // Debug: console.log(e.target)
     UI.deleteMovie(e.target);
+    Store.removeMovie(e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.textContent);
+    console.log(e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.textContent);
     UI.showAlert('Movie Removed From Wishlist', 'success')
 });
